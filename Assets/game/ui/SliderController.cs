@@ -3,9 +3,11 @@ using System.Collections;
 
 public class SliderController : MonoBehaviour {
 
+
+    private Animator animController;
     void Awake()
     {
-        GetComponent<Animator>().Stop();
+        animController = GetComponent<Animator>();
     }
 	// Use this for initialization
 	void Start () {
@@ -19,8 +21,8 @@ public class SliderController : MonoBehaviour {
 
     public void enterSlider()
     {
-
-        GetComponent<Animator>().Play("on_enter_slider");
+        //GetComponent<Animator>().Play("on_enter_slider");
+        animController.SetTrigger("enter_trigger");
     }
 
 
