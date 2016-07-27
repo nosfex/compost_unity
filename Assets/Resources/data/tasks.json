@@ -1,0 +1,7 @@
+{
+	"tasks":
+	[
+		{"timed":false, "goal":1, "type":"build", "target":"Clone Center", "description":"Build 1 Clone Center"},
+		{"timed":false, "goal":100, "type":"gather", "target":"gold", "description":"gather 100 gold"}
+	]
+}

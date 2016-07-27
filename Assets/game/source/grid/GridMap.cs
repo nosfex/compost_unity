@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class GridMap : MonoBehaviour
 {
@@ -37,6 +38,8 @@ public class GridMap : MonoBehaviour
                 g.transform.position = new Vector3(-10 * (y + gridOffset), 0, -10 * (x + gridOffset) );
                 g.transform.SetParent(this.gameObject.transform);
                 // GH: Set the grid
+
+                g.name = "grid_" + x.ToString() + "_" + y.ToString() + "_pass_" + increaseGridCount.ToString();
                 grids[x][y] = g;
             }
         }
@@ -61,13 +64,31 @@ public class GridMap : MonoBehaviour
             for (int y = 1; y < maxGridLine - 1; y++)
             {
                 Vector3 newPos = temp[x][y].transform.position;
-                temp[x][y] = currentGrids[x - 1][y - 1];
+                string name = temp[x][y].name;
+                Destroy(temp[x][y]);
+                temp[x][y] = Instantiate(currentGrids[x - 1][y - 1]);
+                temp[x][y].transform.SetParent(transform);
+                temp[x][y].name = name;
                 temp[x][y].transform.position = newPos;
             }
         }
 
         // GH: Make everything cool
         currentGrids = temp;
+
+        for (int i = 0; i < this.transform.childCount; i++)
+        {
+            if (transform.GetChild(i).name.Contains("pass_" + increaseGridCount))
+            {
+                continue;
+            }
+
+            else
+            {
+                GameObject go = transform.GetChild(i).gameObject;
+                Destroy(go, 0.1f);
+            }
+        }
         /*
         for (int i = 0; i < gridCount; i++)
         {
@@ -78,6 +99,33 @@ public class GridMap : MonoBehaviour
         }
         */
         
+    }
+
+    public List<Grid> getN4List(int x, int y)
+    {
+        List<Grid> n4 = new List<Grid>();
+
+        if (x > 0)
+        {
+            n4.Add(currentGrids[x - 1][y]);
+        }
+
+        if (x < gridCount - 1)
+        {
+            n4.Add(currentGrids[x + 1][y]);
+        }
+
+        if (y > 0)
+        {
+            n4.Add(currentGrids[x][y - 1]);
+        }
+
+        if (y < gridCount - 1)
+        {
+            n4.Add(currentGrids[x][y + 1]);
+        }
+
+        return n4;
     }
 
 

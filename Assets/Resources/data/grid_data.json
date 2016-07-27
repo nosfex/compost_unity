@@ -1,0 +1,9 @@
+{
+	"grids":
+	[
+	
+		{"type":"base", "categoryFilter":["Energy","Production","Housing"], "buildingFilter":["Power Plant","Power Line","Slave Agency","Clone Center", "richhood"], "power":true},
+		{"type":"water", "categoryFilter":["Production"], "buildingFilter":["Water Extractor"], "power":false},
+		{"type":"mineral", "categoryFilter":["Production"], "buildingFilter":["Mineral Extractor"],"power":true}
+	]
+}
