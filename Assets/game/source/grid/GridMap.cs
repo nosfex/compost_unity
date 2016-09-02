@@ -58,6 +58,8 @@ public class GridMap : MonoBehaviour
         initializeMap(gridCount, out temp, -increaseGridCount);
         // GH: Recalculate with the maximum possible grids per line
         int maxGridLine = gridCount;
+
+        Grid selectedGrid = null;
         // GH: Replace the new tiles with the old ones
         for (int x = 1; x < maxGridLine - 1; x++)
         {
@@ -65,11 +67,18 @@ public class GridMap : MonoBehaviour
             {
                 Vector3 newPos = temp[x][y].transform.position;
                 string name = temp[x][y].name;
-                Destroy(temp[x][y]);
-                temp[x][y] = Instantiate(currentGrids[x - 1][y - 1]);
-                temp[x][y].transform.SetParent(transform);
+                
+                Destroy(temp[x][y].gameObject);
+                Grid current = currentGrids[x - 1][y - 1];
+                temp[x][y] = Instantiate(current);
+                temp[x][y].transform.SetParent(this.gameObject.transform);
                 temp[x][y].name = name;
                 temp[x][y].transform.position = newPos;
+                temp[x][y].Selected = (current).Selected;
+                if (temp[x][y].Selected)
+                {
+                    selectedGrid = temp[x][y];
+                }
             }
         }
 
@@ -98,6 +107,8 @@ public class GridMap : MonoBehaviour
             }
         }
         */
+
+        EventManager.ProcessGridAdd(selectedGrid);
         
     }
 

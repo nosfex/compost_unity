@@ -3,7 +3,7 @@ using System.Collections;
 
 public class CameraController : MonoBehaviour {
 
-    GameObject currentFocus;
+    Grid currentFocus;
 
     float height = 30;
     private float heightRate = 10;
@@ -15,7 +15,7 @@ public class CameraController : MonoBehaviour {
     float screenHeight = 0;
 
 
-    GameObject previousSelected = null;
+    Grid previousSelected = null;
     // GH: Temp until I do mouse collision with the slider
     bool locked = false;
     // Use this for initialization
@@ -23,7 +23,16 @@ public class CameraController : MonoBehaviour {
         screenHeight = Screen.height;
         screenWidth = Screen.width;
 
-	}
+        // GH: Need a callback whenever we add a grid
+        EventManager.OnGridsAdded += reprocessGrids;
+    }
+
+
+    // GH: Re build the previousSelected grid, keep us bug free
+    void reprocessGrids(Grid selectedGrid)
+    {
+        previousSelected = selectedGrid;
+    }
 
     // Update is called once per frame
     void Update()
@@ -36,17 +45,18 @@ public class CameraController : MonoBehaviour {
             bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out info, 100);
             if (hit)
             {
-
+                
                 if (previousSelected != null)
                 {
-                    previousSelected.transform.parent.GetComponent<Grid>().Selected = false;
+                    previousSelected.Selected = false;
                 }
                 GameObject grid = info.transform.gameObject;
                 if (grid.tag == "Grid")
                 {
                     // GH: Initialize the selector thingy?
-                    previousSelected = currentFocus = grid;
-                    grid.transform.parent.GetComponent<Grid>().Selected = true;
+                    currentFocus = grid.transform.parent.GetComponentInChildren<Grid>();
+                    previousSelected = grid.transform.parent.GetComponent<Grid>();
+                    previousSelected.Selected = true;
                     EventManager.ProcessClick();
                     locked = true;
                 }
@@ -57,11 +67,15 @@ public class CameraController : MonoBehaviour {
 
                 if (previousSelected != null)
                 {
-                    previousSelected.transform.parent.GetComponent<Grid>().Selected = false;
+                    previousSelected.Selected = false;
+                    previousSelected = null;
                 }
                 if (currentFocus != null)
                 {
-                    currentFocus.transform.parent.GetComponent<Grid>().Selected = false;
+                    currentFocus.Selected = false;
+                    previousSelected = null;
+                    currentFocus = null;
+
                 }
 
             }
