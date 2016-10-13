@@ -1,9 +1,9 @@
 ﻿Shader "Outlined/Silhouetted Diffuse" {
 	Properties{
-		_Color("Main Color", Color) = (.5,.5,.5,1)
-		_OutlineColor("Outline Color", Color) = (0,0,0,1)
+		_Color("Main Color", Color) = (.5,.5,.5,0.2)
+		_OutlineColor("Outline Color", Color) = (0,0,0,0.2)
 		_Outline("Outline width", Range(0.0, 0.03)) = .005
-		_MainTex("Base (RGB)", 2D) = "white" { }
+		_MainTex("Base (RGBA)", 2D) = "white" { }
 	}
 
 		CGINCLUDE
@@ -49,7 +49,7 @@
 		ColorMask RGB // alpha not used
 
 					  // you can choose what kind of blending mode you want for the outline
-		Blend SrcAlpha OneMinusSrcAlpha // Normal
+		Blend SrcAlpha SrcColor // Normal
 										//Blend One One // Additive
 										//Blend One OneMinusDstColor // Soft Additive
 										//Blend DstColor Zero // Multiplicative
@@ -69,7 +69,7 @@
 		Name "BASE"
 		ZWrite On
 		ZTest LEqual
-		Blend SrcAlpha OneMinusSrcAlpha
+		Blend SrcAlpha SrcColor
 		Material{
 		Diffuse[_Color]
 		Ambient[_Color]
@@ -97,7 +97,7 @@
 		ColorMask RGB
 
 		// you can choose what kind of blending mode you want for the outline
-		Blend SrcAlpha OneMinusSrcAlpha // Normal
+		Blend SrcAlpha SrcColor // Normal
 										//Blend One One // Additive
 										//Blend One OneMinusDstColor // Soft Additive
 										//Blend DstColor Zero // Multiplicative
@@ -114,7 +114,7 @@
 		Name "BASE"
 		ZWrite On
 		ZTest LEqual
-		Blend SrcAlpha OneMinusSrcAlpha
+		Blend SrcAlpha SrcColor
 		Material{
 		Diffuse[_Color]
 		Ambient[_Color]

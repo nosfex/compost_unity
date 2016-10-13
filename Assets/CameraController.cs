@@ -13,9 +13,10 @@ public class CameraController : MonoBehaviour {
     
     float screenWidth = 0;
     float screenHeight = 0;
-
-
+    
     Grid previousSelected = null;
+
+    bool externalLock = false;
     // GH: Temp until I do mouse collision with the slider
     bool locked = false;
     // Use this for initialization
@@ -25,8 +26,14 @@ public class CameraController : MonoBehaviour {
 
         // GH: Need a callback whenever we add a grid
         EventManager.OnGridsAdded += reprocessGrids;
+        EventManager.OnLockCam += OnLockCam;
     }
 
+    void OnLockCam(bool lockCam)
+    {
+        externalLock = lockCam;
+        locked = lockCam;
+    }
 
     // GH: Re build the previousSelected grid, keep us bug free
     void reprocessGrids(Grid selectedGrid)
@@ -45,7 +52,6 @@ public class CameraController : MonoBehaviour {
             bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out info, 100);
             if (hit)
             {
-                
                 if (previousSelected != null)
                 {
                     previousSelected.Selected = false;
@@ -57,27 +63,32 @@ public class CameraController : MonoBehaviour {
                     currentFocus = grid.transform.parent.GetComponentInChildren<Grid>();
                     previousSelected = grid.transform.parent.GetComponent<Grid>();
                     previousSelected.Selected = true;
-                    EventManager.ProcessClick();
+                    EventManager.ProcessClick(true);
                     locked = true;
+
+                    externalLock = false;
                 }
             }
             else
             {
-                locked = false;
-
-                if (previousSelected != null)
+                if (externalLock == false)
                 {
-                    previousSelected.Selected = false;
-                    previousSelected = null;
-                }
-                if (currentFocus != null)
-                {
-                    currentFocus.Selected = false;
-                    previousSelected = null;
-                    currentFocus = null;
+                    locked = false;
 
-                }
+                    if (previousSelected != null)
+                    {
+                        previousSelected.Selected = false;
+                        previousSelected = null;
+                    }
+                    if (currentFocus != null)
+                    {
+                        currentFocus.Selected = false;
+                        previousSelected = null;
+                        currentFocus = null;
+                    }
 
+                    EventManager.ProcessClick(false);
+                }
             }
         }
 #endif

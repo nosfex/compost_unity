@@ -7,7 +7,7 @@ public class UIController : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        EventManager.OnClicked += slider.enterSlider;
+        EventManager.OnClicked += slider.showSlider;
 
     }
 

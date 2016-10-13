@@ -87,6 +87,12 @@ public class BuildingFactory : MonoBehaviour
 
         }
 	}
+
+    public Building addBuilding(string name)
+    {
+        Debug.Log(buildings[name]);
+        return null;
+    }
 	
 	// Update is called once per frame
 	void Update () {

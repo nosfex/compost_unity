@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System.Collections;
 
 public enum PanelID
@@ -11,7 +12,7 @@ public enum PanelID
     CONTEXTUAL_PANEL
 }
 
-public class SliderController : MonoBehaviour {
+public class SliderController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler  {
 
    
     public RectTransform[] panels;
@@ -33,7 +34,6 @@ public class SliderController : MonoBehaviour {
             
             switch (jo.GetField("owner").str)
             {
-               
                 case "Energy":                   
                     parent = panels[(int)PanelID.ENERGY_PANEL];
                     break;
@@ -49,24 +49,48 @@ public class SliderController : MonoBehaviour {
             {
                 Button btn = Instantiate(baseBtn);
                 btn.GetComponentInChildren<Text>().text = jj.str;
+                btn.onClick.AddListener( () => { addBuilding(btn.GetComponentInChildren<Text>().text); }  );
                 btn.transform.SetParent(parent);
             }
-        }
-
-           
-   
-        
+        }      
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // GH: Just add a building to the currently selected grid
+    public void addBuilding(string buildingName)
+    {
+        GameManager.instance.Builder.addBuilding(buildingName);
+    }
+    
+   
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        // GH: Lock the ui
+        EventManager.ProcessLockCam(true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        // GH: Unlock the ui
+        EventManager.ProcessLockCam(false);
+    }
+    // Update is called once per frame
+    void Update () {
 	
 	}
 
-    public void enterSlider()
+    public void showSlider(bool show)
     {
-        animController.SetTrigger("enter_trigger");
-        enablePanel(PanelID.CATEGORY_PANEL);
+        if (show)
+        {   
+            animController.SetTrigger("enter_trigger");
+            enablePanel(PanelID.CATEGORY_PANEL);
+        }
+        else
+        {
+            animController.SetTrigger("exit_trigger");
+            animController.ResetTrigger("enter_trigger");
+            enablePanel(PanelID.CATEGORY_PANEL);
+        }
     }
 
     public void enablePanel(PanelID id)

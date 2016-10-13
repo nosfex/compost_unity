@@ -16,13 +16,24 @@ public class GridMap : MonoBehaviour
 	void Start ()
     {
         initializeMap(initialGrids, out currentGrids);
-        Grid g = currentGrids[1][1];
+        
+        Grid g = MiddleGrid;
         GameObject sphere = Instantiate(testSphere);
         sphere.transform.position = g.transform.position;
         sphere.transform.SetParent(g.transform);
 	}
 
-    void initializeMap(int gridSize, out Grid[][] grids, int gridOffset = 0)
+
+    public Grid MiddleGrid
+    {
+        get
+        {
+            int midX = (int)(((float)currentGrids.Length - 1) / 2);
+
+            return currentGrids[midX][midX];
+        }
+    }
+    private void initializeMap(int gridSize, out Grid[][] grids, int gridOffset = 0)
     {
 
         int maxGrids = (gridSize);
@@ -98,18 +109,8 @@ public class GridMap : MonoBehaviour
                 Destroy(go, 0.1f);
             }
         }
-        /*
-        for (int i = 0; i < gridCount; i++)
-        {
-            foreach (Grid g in temp[i])
-            {
-                Destroy(g.gameObject, 0.5f);
-            }
-        }
-        */
-
-        EventManager.ProcessGridAdd(selectedGrid);
         
+        EventManager.ProcessGridAdd(selectedGrid);
     }
 
     public List<Grid> getN4List(int x, int y)
@@ -138,8 +139,6 @@ public class GridMap : MonoBehaviour
 
         return n4;
     }
-
-
 
     // Update is called once per frame
     void Update ()

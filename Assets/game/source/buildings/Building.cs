@@ -22,7 +22,6 @@ public class Building : MonoBehaviour
 
     private bool powered = false;
 
-
     public void setData(BuildingData data)
     {
         #region strings
@@ -52,12 +51,8 @@ public class Building : MonoBehaviour
         #endregion
     }
     // Use this for initialization
-    void Start () {
-	
-	}
+    void Start () { }
 	
 	// Update is called once per frame
-	void Update () {
-	
-	}
+	void Update () { }
 }
